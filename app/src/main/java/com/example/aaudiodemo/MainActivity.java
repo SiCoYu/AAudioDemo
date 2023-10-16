@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
 import com.example.aaudiodemo.databinding.ActivityMainBinding;
@@ -20,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private long mEngineHandle = INVALID_PTR;
-    private static final String TEST_FILE_PATH = "16k16bit.pcm";
-    private static final int AUDIO_SAMPLERATE = 16000;
+    private static final String TEST_FILE_PATH = "ka.pcm";
+    private static final int AUDIO_SAMPLERATE = 48000;
     private static final int AUDIO_CHANNELS = 1;
     private static final int AUDIO_FORMAT = 2;
 
@@ -38,7 +41,45 @@ public class MainActivity extends AppCompatActivity {
                 mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
             }
         });
+
+        binding.playAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_MOVE:
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEngineStop(mEngineHandle);
+                            nativeDestroyAAudioEngine(mEngineHandle);
+                            mEngineHandle = INVALID_PTR;
+                        }
+                        if (mEngineHandle == INVALID_PTR) {
+                            mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
+                        }
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEnginePlay(mEngineHandle);
+                        }
+                        break;
+                    default:break;
+                }
+                return true;
+            }
+        });
+
         binding.playAudio.setOnClickListener((v) -> {
+            if (mEngineHandle != INVALID_PTR) {
+                nativeAAudioEngineStop(mEngineHandle);
+                nativeDestroyAAudioEngine(mEngineHandle);
+                mEngineHandle = INVALID_PTR;
+            }
+            if (mEngineHandle == INVALID_PTR) {
+                mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
+            }
             if (mEngineHandle != INVALID_PTR) {
                 nativeAAudioEnginePlay(mEngineHandle);
             }
