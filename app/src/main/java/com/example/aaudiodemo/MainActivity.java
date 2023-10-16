@@ -36,9 +36,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
-        binding.initAudio.setOnClickListener(v -> {
-            if (mEngineHandle == INVALID_PTR) {
-                mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
+
+        binding.initAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_MOVE:
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEngineStop(mEngineHandle);
+                            nativeDestroyAAudioEngine(mEngineHandle);
+                            mEngineHandle = INVALID_PTR;
+                        }
+                        if (mEngineHandle == INVALID_PTR) {
+                            mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
+                        }
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEnginePlay(mEngineHandle);
+                        }
+                        break;
+                    default:break;
+                }
+                return true;
             }
         });
 
@@ -71,29 +95,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        binding.playAudio.setOnClickListener((v) -> {
-            if (mEngineHandle != INVALID_PTR) {
-                nativeAAudioEngineStop(mEngineHandle);
-                nativeDestroyAAudioEngine(mEngineHandle);
-                mEngineHandle = INVALID_PTR;
-            }
-            if (mEngineHandle == INVALID_PTR) {
-                mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
-            }
-            if (mEngineHandle != INVALID_PTR) {
-                nativeAAudioEnginePlay(mEngineHandle);
+        binding.pauseAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_MOVE:
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEngineStop(mEngineHandle);
+                            nativeDestroyAAudioEngine(mEngineHandle);
+                            mEngineHandle = INVALID_PTR;
+                        }
+                        if (mEngineHandle == INVALID_PTR) {
+                            mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
+                        }
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEnginePlay(mEngineHandle);
+                        }
+                        break;
+                    default:break;
+                }
+                return true;
             }
         });
-        binding.pauseAudio.setOnClickListener((v) -> {
-            if (mEngineHandle != INVALID_PTR) {
-                nativeAAudioEnginePause(mEngineHandle);
-            }
-        });
-        binding.stopAudio.setOnClickListener((v) -> {
-            if (mEngineHandle != INVALID_PTR) {
-                nativeAAudioEngineStop(mEngineHandle);
-                nativeDestroyAAudioEngine(mEngineHandle);
-                mEngineHandle = INVALID_PTR;
+
+        binding.stopAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_MOVE:
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEngineStop(mEngineHandle);
+                            nativeDestroyAAudioEngine(mEngineHandle);
+                            mEngineHandle = INVALID_PTR;
+                        }
+                        if (mEngineHandle == INVALID_PTR) {
+                            mEngineHandle = nativeCreateAAudioEngine(getAssets(), TEST_FILE_PATH, AUDIO_SAMPLERATE, AUDIO_CHANNELS, AUDIO_FORMAT);
+                        }
+                        if (mEngineHandle != INVALID_PTR) {
+                            nativeAAudioEnginePlay(mEngineHandle);
+                        }
+                        break;
+                    default:break;
+                }
+                return true;
             }
         });
     }
